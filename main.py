@@ -26,6 +26,7 @@ def proc(w_l: list, c_l: list, n_l: list, v_l: list) -> list:
         # 处理空白字符
         if re.search(r'\s', w_l[i]):
             i += 1
+
         # 处理变量
         elif re.search('[A-Za-z]', w_l[i]):
             while re.search('[A-Za-z]', w_l[i]):
@@ -38,7 +39,8 @@ def proc(w_l: list, c_l: list, n_l: list, v_l: list) -> list:
                 if str_v == 'over':
                     break
                 elif str_v not in c_l:
-                    v_l.append(str_v)
+                    if str_v not in v_l:
+                        v_l.append(str_v)
                     make_map(True, my_maps, str_v, 'v', v_l)
                 else:
                     make_map(True, my_maps, str_v, 'v', c_l)
@@ -46,14 +48,17 @@ def proc(w_l: list, c_l: list, n_l: list, v_l: list) -> list:
             else:
                 make_map(False, my_maps, str_v)
                 str_v = ''
+
         # 处理数字
         elif re.search(r'\d', w_l[i]):
             while re.search(r'\d', w_l[i]):
                 str_n += w_l[i]
                 i += 1
-            n_l.append(str_n)
+            if str_n not in n_l:
+                n_l.append(str_n)
             make_map(True, my_maps, str_n, 'n', n_l)
             str_n = ''
+
         # 处理非数字字母下划线
         else:
             if w_l[i] + w_l[i + 1] == '==':
@@ -86,6 +91,8 @@ def proc(w_l: list, c_l: list, n_l: list, v_l: list) -> list:
             else:
                 make_map(False, my_maps, w_l[i])
                 i += 1
+        if i == len(w_l) - 1:
+            break
     return my_maps
 
 
@@ -98,9 +105,12 @@ def analysis(filename):
     print(f'以下是{filename}的词法分析报告:')
     for _map_ in maps:
         print(f'{_map_[0]}\t({_map_[0]}, {_map_[1]})')
-    print('over\n')
+    print(character_list)
+    print(num_list)
+    print(variable_list)
+    # print('over\n')
 
 
 analysis('test_code1.txt')
-analysis('test_code2.txt')
-analysis('test_code3.txt')
+# analysis('test_code2.txt')
+# analysis('test_code3.txt')
