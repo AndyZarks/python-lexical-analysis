@@ -19,8 +19,8 @@ def make_map(fact: bool, maps: list, key: str, category: str = None, seq: list =
 
 def proc(w_l: list, c_l: list, n_l: list, v_l: list) -> list:
     my_maps = []
-    list_v = []
-    list_n = []
+    str_v = ''
+    str_n = ''
     i = 0
     while i < len(w_l):
         # 处理空白字符
@@ -29,12 +29,11 @@ def proc(w_l: list, c_l: list, n_l: list, v_l: list) -> list:
         # 处理变量
         elif re.search('[A-Za-z]', w_l[i]):
             while re.search('[A-Za-z]', w_l[i]):
-                list_v.append(w_l[i])
+                str_v += w_l[i]
                 if i < len(w_l) - 1:
                     i += 1
                 else:
                     break
-            str_v = ''.join(list_v)
             if len(str_v) < 10:
                 if str_v == 'over':
                     break
@@ -43,19 +42,18 @@ def proc(w_l: list, c_l: list, n_l: list, v_l: list) -> list:
                     make_map(True, my_maps, str_v, 'v', v_l)
                 else:
                     make_map(True, my_maps, str_v, 'v', c_l)
-                list_v = []
+                str_v = ''
             else:
                 make_map(False, my_maps, str_v)
-                list_v = []
+                str_v = ''
         # 处理数字
         elif re.search(r'\d', w_l[i]):
             while re.search(r'\d', w_l[i]):
-                list_n.append(w_l[i])
+                str_n += w_l[i]
                 i += 1
-            str_n = ''.join(list_n)
             n_l.append(str_n)
             make_map(True, my_maps, str_n, 'n', n_l)
-            list_n = []
+            str_n = ''
         # 处理非数字字母下划线
         else:
             if w_l[i] + w_l[i + 1] == '==':
